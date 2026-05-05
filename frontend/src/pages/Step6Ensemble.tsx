@@ -6,7 +6,7 @@ import useAppStore from '@/store/useAppStore'
 import type { ModelName } from '@/types'
 import { MODEL_COLORS, CLASS_COLORS } from '@/types'
 
-const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'RF', 'MLP', 'KNN']
+const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'KNN', 'MLP', 'CNN', 'LSTM']
 
 function voteTally(results: Record<string, any>, task: 'task1_acc' | 'task2_mean') {
   return ALL_MODELS

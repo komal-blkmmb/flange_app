@@ -17,30 +17,25 @@ const MODEL_DESCRIPTIONS: Record<ModelName, { short: string; how: string; hyper:
     how:   'Multiplies each feature by a learned weight, sums them up, then pushes the result through a softmax function to get class probabilities. Simple, fast, and highly interpretable — the weights tell you which features matter most.',
     hyper: { 'Regularisation C': '1.0', 'Solver': 'lbfgs', 'Max iterations': '2000', 'Class weights': 'balanced' },
   },
-  RF: {
-    short: 'Random Forest',
-    how:   'Trains 200 decision trees, each on a random subset of the data and features. Every tree votes on the class — the majority wins. The randomness prevents any single tree from overfitting and makes the ensemble more robust.',
-    hyper: { 'Trees': '200', 'Max depth': 'unlimited', 'Feature subset': 'sqrt(n_features)', 'Class weights': 'balanced' },
-  },
-  MLP: {
-    short: 'Multi-Layer Perceptron',
-    how:   'A two-layer neural network: the first layer (128 neurons) learns combinations of raw features; the second layer (64 neurons) builds higher-level patterns. ReLU activations allow non-linear decision boundaries.',
-    hyper: { 'Layers': '82 → 128 → 64 → 3', 'Activation': 'ReLU', 'Early stopping': 'yes (val=10%)', 'Max iterations': '500' },
-  },
   KNN: {
     short: 'K-Nearest Neighbours',
-    how:   'No training step — stores all 991 training hits. To classify a new hit, it finds the 5 most similar hits in the training set (by Euclidean distance in feature space) and takes a majority vote. Non-parametric, so it can capture any decision boundary shape.',
-    hyper: { 'k (neighbours)': '5', 'Distance metric': 'Euclidean (L2)', 'Weights': 'uniform', 'Algorithm': 'ball_tree' },
+    how:   'No training step — stores all training hits. To classify a new hit, it finds the 5 most similar hits in the training set (by Euclidean distance) and takes a majority vote. Non-parametric, so it can capture any decision boundary shape.',
+    hyper: { 'k (neighbours)': '5', 'Distance metric': 'Euclidean (L2)', 'Weights': 'uniform' },
+  },
+  MLP: {
+    short: 'Multi-Layer Perceptron (Keras)',
+    how:   'A 3-layer neural network with BatchNorm and Dropout: the layers (256→128→64) learn increasingly abstract patterns from the 82 tabular features. ReLU activations allow non-linear decision boundaries.',
+    hyper: { 'Layers': '82 → 256 → 128 → 64 → 3', 'Activation': 'ReLU + BatchNorm', 'Dropout': '0.4 / 0.3 / 0.2', 'Optimizer': 'Adam (lr=1e-3)' },
   },
   CNN: {
     short: 'Convolutional Neural Network',
-    how:   'Takes the mel spectrogram (64 × 128 image) as input. Convolutional layers slide small filters across the image to detect patterns like formant ridges and decay slopes — the same idea that makes image recognition work.',
-    hyper: { 'Input': '64 mel × 128 frames', 'Conv layers': '2 × (32, 64 filters)', 'Dense': '128 → 3', 'Epochs': '50' },
+    how:   'Takes the mel spectrogram (64 × 128 image) as input. Three Conv2D layers slide filters across the image to detect patterns like formant ridges and decay slopes — the same idea that makes image recognition work.',
+    hyper: { 'Input': '64 mel × 128 frames', 'Conv layers': '32→64→128 filters', 'Pooling': 'MaxPool2D + GlobalAvgPool', 'Epochs': '50 (early stopping)' },
   },
   LSTM: {
-    short: 'Long Short-Term Memory',
-    how:   'Reads the mel spectrogram as a time sequence — 128 frames, each of 64 mel values. The LSTM cell maintains a "memory" across time, allowing it to capture patterns like the rate at which energy decays over the 500ms window.',
-    hyper: { 'Input': '128 time steps × 64 features', 'LSTM units': '64 (bidirectional)', 'Dense': '64 → 3', 'Epochs': '50' },
+    short: 'Bidirectional LSTM',
+    how:   'Reads the mel spectrogram as a time sequence — 128 frames, each of 64 mel values. The bidirectional LSTM reads forward AND backward through time, capturing patterns like the rate at which energy decays over the 500ms window.',
+    hyper: { 'Input': '128 time steps × 64 mel features', 'BiLSTM layers': '2 × (64, 32 units bidirectional)', 'Dense': '64 → 3', 'Epochs': '50 (early stopping)' },
   },
 }
 

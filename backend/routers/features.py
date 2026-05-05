@@ -10,8 +10,8 @@ from fastapi import APIRouter, Header, HTTPException
 from session import session_manager
 from ml.feature_extraction import (
     extract_features, extract_mel_spectrogram,
-    extract_psd, extract_mfcc, extract_decay,
-    extract_energy_ratio, FEATURE_NAMES
+    relative_psd_log_bins, mfcc_stats, decay_tau,
+    energy_ratio, impute_nans, FEATURE_NAMES
 )
 from config import IDX_TO_CLASS, CLASS_NAMES
 

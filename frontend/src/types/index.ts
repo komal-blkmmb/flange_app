@@ -64,7 +64,7 @@ export interface HitFeatureDetail {
 }
 
 // ── Training ───────────────────────────────────────────────────────────────
-export type ModelName = 'SVM' | 'LR' | 'RF' | 'MLP' | 'KNN' | 'CNN' | 'LSTM'
+export type ModelName = 'SVM' | 'LR' | 'KNN' | 'MLP' | 'CNN' | 'LSTM'
 export type TrainingStatus = 'idle' | 'queued' | 'training' | 'done' | 'error'
 
 export interface FoldRecord {
@@ -175,9 +175,8 @@ export const CLASS_LABELS: Record<number, string> = {
 export const MODEL_COLORS: Record<ModelName, string> = {
   SVM:  '#185FA5',
   LR:   '#0F6E56',
-  RF:   '#854F0B',
-  MLP:  '#534AB7',
   KNN:  '#993556',
+  MLP:  '#534AB7',
   CNN:  '#993C1D',
   LSTM: '#444441',
 }

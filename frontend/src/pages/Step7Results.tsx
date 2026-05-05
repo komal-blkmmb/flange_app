@@ -12,7 +12,7 @@ import useAppStore from '@/store/useAppStore'
 import type { ModelName } from '@/types'
 import { MODEL_COLORS } from '@/types'
 
-const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'RF', 'MLP', 'KNN']
+const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'KNN', 'MLP', 'CNN', 'LSTM']
 
 const KEY_FINDINGS = [
   {
@@ -45,7 +45,7 @@ export default function Step7Results() {
 
   const rows = ALL_MODELS
     .filter(m => modelResults[m])
-    .map(m => ({ ...modelResults[m] }))
+    .map(m => ({ model: m, ...modelResults[m] }))
     .sort((a, b) => b[sortBy] - a[sortBy])
 
   const best = rows[0]

@@ -7,7 +7,7 @@ import useAppStore from '@/store/useAppStore'
 import { api, createTrainingWS } from '@/api/client'
 import type { ModelName, WSEvent } from '@/types'
 
-const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'RF', 'MLP', 'KNN']
+const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'KNN', 'MLP', 'CNN', 'LSTM']
 
 export default function Step5Training() {
   const navigate = useNavigate()
@@ -32,7 +32,9 @@ export default function Step5Training() {
   async function runTraining() {
     setStarted(true); setError(null); setAllDone(false)
     try {
-      const { task_id, models } = await api.startTraining(ALL_MODELS)
+      const { task_id, models } = await api.startTraining(
+        ALL_MODELS.map(m => m === 'LSTM' ? 'BiLSTM' : m) as any
+      )
       startTraining(task_id, models as ModelName[])
 
       wsRef.current = createTrainingWS(
@@ -80,7 +82,7 @@ export default function Step5Training() {
           <div className="text-5xl mb-4">🤖</div>
           <p className="text-gray-600 font-medium mb-1">Ready to train {ALL_MODELS.length} classifiers</p>
           <p className="text-gray-400 text-sm mb-6">
-            SVM, Logistic Regression, Random Forest, MLP, and KNN.
+            SVM, Logistic Regression, KNN, MLP (Keras), CNN (mel spectrogram), and Bidirectional LSTM.
             Results stream live. Shallow models take ~1–2 minutes total on CPU.
           </p>
           <button onClick={runTraining}
