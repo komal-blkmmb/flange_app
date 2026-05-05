@@ -67,7 +67,7 @@ const useAppStore = create<AppStore>()(
     (set, get) => ({
       sessionId:   null,
       currentStep: 1,
-      apiBase:     import.meta.env.VITE_API_URL ?? 'http://localhost:7860',
+      apiBase: (import.meta as any).env?.VITE_API_URL ?? 'http://localhost:7860',
 
       uploadedFiles: [],
       labFiles:      [],

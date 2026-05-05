@@ -156,7 +156,7 @@ export default function Step2Upload() {
             </InsightCallout>
           )}
           {coverage?.complete && (
-            <InsightCallout title="Dataset complete — all 48 files found" variant="success" />
+            <InsightCallout title="Dataset complete — all 48 files found" variant="success">{' '}</InsightCallout>
           )}
 
           {/* File table (first 10) */}
