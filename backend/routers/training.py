@@ -493,9 +493,7 @@ def _train_bilstm(waveforms, y, groups, loop, queue, session, epochs=50):
 
 ALL_MODELS = ["SVM", "LR", "KNN", "MLP", "CNN", "BiLSTM"]
 
-def _train_all(task_id: str, session_id: str, models: list[str]):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+def _train_all(task_id: str, session_id: str, models: list[str], main_loop: asyncio.AbstractEventLoop):
 
     session = session_manager.get(session_id)
     if session is None:
@@ -503,6 +501,8 @@ def _train_all(task_id: str, session_id: str, models: list[str]):
     queue = ws_manager.get_queue(task_id)
     if queue is None:
         return
+
+    loop = main_loop
 
     feats = session.features
     if not feats:
@@ -553,7 +553,7 @@ async def start_training(
     session.touch()
 
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(_executor, _train_all, task_id, session_id, models)
+    loop.run_in_executor(_executor, _train_all, task_id, session_id, models, loop)
 
     return {"task_id": task_id, "models": models}
 

@@ -132,11 +132,18 @@ async def get_hit_features(
     win = np.array(hits["waveforms"][hit_idx], dtype=np.float32)
 
     # Individual feature components for visualisation
-    psd          = extract_psd(win)
-    mfcc_m, mfcc_s = extract_mfcc(win)
-    tau          = extract_decay(win)
-    energy_ratio = extract_energy_ratio(win)
-    mel          = extract_mel_spectrogram(win)
+    psd_bins, _, _ = relative_psd_log_bins(win)
+
+    mfcc_all = mfcc_stats(win)
+    mfcc_m   = mfcc_all[:13]
+    mfcc_s   = mfcc_all[13:26]
+
+    tau_val  = decay_tau(win)
+    if np.isnan(tau_val):
+        tau_val = 0.0
+
+    er  = energy_ratio(win)
+    mel = extract_mel_spectrogram(win)
 
     # Decay envelope for chart
     frame_len = int(0.005 * 48000)
@@ -155,11 +162,11 @@ async def get_hit_features(
         "label_idx":   hits["labels"][hit_idx],
         "label_name":  CLASS_NAMES[hits["labels"][hit_idx]],
         "flange_id":   hits["flange_groups"][hit_idx],
-        "psd":         psd.tolist(),
+        "psd":         psd_bins.tolist(),
         "mfcc_mean":   mfcc_m.tolist(),
         "mfcc_std":    mfcc_s.tolist(),
-        "tau":         round(float(tau), 4),
-        "energy_ratio": round(float(energy_ratio), 4),
+        "tau":         round(float(tau_val), 4),
+        "energy_ratio": round(float(er), 4),
         "mel_spectrogram": mel.tolist(),   # (64, 128) — Plotly heatmap
         "decay_rms":   rms_env,
         "decay_t":     decay_t,
