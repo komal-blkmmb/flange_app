@@ -45,7 +45,7 @@ export default function Step7Results() {
 
   const rows = ALL_MODELS
     .filter(m => modelResults[m])
-    .map(m => ({ model: m, ...modelResults[m] }))
+    .map(m => ({ ...modelResults[m], model: m }))
     .sort((a, b) => b[sortBy] - a[sortBy])
 
   const best = rows[0]

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 interface InsightCalloutProps {
   title: string
-  children: React.ReactNode
+  children?: React.ReactNode
   variant?: 'info' | 'success' | 'warning' | 'discovery'
   defaultOpen?: boolean
   collapsible?: boolean
@@ -37,7 +37,7 @@ export function InsightCallout({
           <span className={cn('ml-auto text-xs', v.text)}>{open ? '▲' : '▼'}</span>
         )}
       </div>
-      {open && (
+      {open && children && (
         <div className={cn('text-sm leading-relaxed', v.text)}>
           {children}
         </div>
