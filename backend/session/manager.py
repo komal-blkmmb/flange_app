@@ -42,6 +42,12 @@ class Session:
     # Step 7 / 8 — CORAL
     coral_result: dict = field(default_factory=dict)
 
+    # Trained model objects saved after Step 5 (for classification in Step 9)
+    # Shallow: {"clf": <estimator>, "scaler": <StandardScaler>}
+    # MLP:     {"scaler": <StandardScaler>, "model_path": str}
+    # CNN/LSTM: {"model_path": str}
+    models: dict = field(default_factory=dict)
+
     # Arbitrary scratch storage for any additional data
     extra: dict = field(default_factory=dict)
 

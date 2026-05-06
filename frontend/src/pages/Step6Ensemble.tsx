@@ -48,7 +48,7 @@ export default function Step6Ensemble() {
         step={6}
         title="Ensemble model"
         subtitle="Combine all classifiers to get more robust, reliable predictions."
-        why="No single model is perfect — each has blind spots. By asking all five models to vote and taking the majority, we reduce the chance that one model's failure causes a wrong prediction."
+        why="No single model is perfect,each has blind spots. By asking all five models to vote and taking the majority, we reduce the chance that one model's failure causes a wrong prediction."
       />
 
       <InsightCallout title="How ensemble voting works" variant="discovery">
@@ -72,9 +72,9 @@ export default function Step6Ensemble() {
               tooltip={`Best single model: ${t2votes[0]?.model}`} />
           </div>
 
-          {/* Vote bars — Task 2 */}
+          {/* Vote bars,Task 2 */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-1">Model Task 2 accuracies — who gets how many votes?</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-1">Model Task 2 accuracies,who gets how many votes?</h3>
             <p className="text-xs text-gray-400 mb-3">Higher Task 2 accuracy = more trustworthy voter (better generalisation to unseen flanges).</p>
             <div className="space-y-2">
               {t2votes.map(({ model, acc }) => (
@@ -133,7 +133,7 @@ export default function Step6Ensemble() {
           <InsightCallout title="Why the ensemble doesn't always win" variant="warning" collapsible defaultOpen={false}>
             If all individual models make the same mistake (they tend to confuse 25 and 50 ft-lbs),
             the ensemble makes the same mistake. Voting helps with random errors, not systematic ones.
-            The domain shift problem requires a fundamentally different approach — CORAL alignment.
+            The domain shift problem requires a fundamentally different approach,CORAL alignment.
           </InsightCallout>
 
           <div className="flex justify-between">

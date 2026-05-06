@@ -145,6 +145,38 @@ export interface CoralConsensusRow {
   n_hits:            number
 }
 
+// ── Classify (Step 8) ──────────────────────────────────────────────────────
+
+export interface ClassifyFlangePrediction {
+  flange_id:  number
+  n_hits:     number
+  prediction: number        // 0, 25, or 50 ft-lbs
+  proba:      { p_0: number; p_25: number; p_50: number }
+  confidence: number
+  margin:     number
+}
+
+export interface ClassifyResult {
+  status:     string
+  n_hits:     number
+  recordings: { filename: string; flange_id: number; area_id: number; n_hits: number }[]
+  raw: {
+    ensemble_weights: Record<string, number>
+    final_prediction: ClassifyFlangePrediction[]
+  }
+  coral: {
+    cov_distance_before: number | null
+    cov_distance_after:  number | null
+    improvement_pct:     number | null
+    final_prediction:    ClassifyFlangePrediction[]
+  }
+  pca: {
+    train:      { x: number; y: number; label: number }[]
+    test_raw:   { x: number; y: number; pred_label: number; flange_id: number }[]
+    test_coral: { x: number; y: number; pred_label: number; flange_id: number }[]
+  }
+}
+
 // ── Pipeline step ──────────────────────────────────────────────────────────
 export type StepId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
@@ -156,7 +188,7 @@ export const STEPS: { id: StepId; label: string; short: string }[] = [
   { id: 5, label: 'Model training',      short: 'Training' },
   { id: 6, label: 'Ensemble',            short: 'Ensemble' },
   { id: 7, label: 'Results dashboard',   short: 'Results'  },
-  { id: 8, label: 'CORAL adaptation',    short: 'CORAL'    },
+  { id: 8, label: 'Classify new data',   short: 'Classify' },
 ]
 
 // Class display helpers

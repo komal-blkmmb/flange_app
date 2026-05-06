@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import type {
   StepId, FileRecord, DatasetCoverage, HitStats,
   ScatterPoint, ModelResult, ModelName, TrainingStatus,
-  EpochMetric, CoralResult, WSEvent, HitFeatureDetail
+  EpochMetric, WSEvent, HitFeatureDetail, ClassifyResult
 } from '@/types'
 
 interface AppStore {
@@ -31,16 +31,17 @@ interface AppStore {
   featureNames:     string[]
 
   // ── Step 5: Training ──────────────────────────────────────────────────
-  trainingStatus:   Record<ModelName, TrainingStatus>
-  modelResults:     Record<string, ModelResult>
-  liveMetrics:      Record<ModelName, EpochMetric[]>
-  liveFolds:        Record<ModelName, { fold: number; flange_out: number; acc: number }[]>
-  currentTaskId:    string | null
+  trainingStatus:    Record<ModelName, TrainingStatus>
+  modelResults:      Record<string, ModelResult>
+  liveMetrics:       Record<ModelName, EpochMetric[]>
+  liveFolds:         Record<ModelName, { fold: number; flange_out: number; acc: number }[]>
+  livePhaseBreaks:   Record<ModelName, number[]>
+  currentTaskId:     string | null
 
-  // ── Step 8: CORAL ─────────────────────────────────────────────────────
-  coralResult: CoralResult | null
+  // ── Step 8: Classify new recordings
+  classifyResult: ClassifyResult | null
 
-  // ── Actions ───────────────────────────────────────────────────────────
+  //── Actions ───────────────────────────────────────────────────────────
   setSessionId:     (id: string) => void
   setStep:          (step: StepId) => void
   setApiBase:       (url: string) => void
@@ -55,7 +56,7 @@ interface AppStore {
 
   startTraining:    (taskId: string, models: ModelName[]) => void
   handleWsEvent:    (event: WSEvent) => void
-  setCoralResult:   (result: CoralResult) => void
+  setClassifyResult:(result: ClassifyResult) => void
 
   reset:            () => void
 }
@@ -86,11 +87,12 @@ const useAppStore = create<AppStore>()(
 
       trainingStatus: INITIAL_TRAINING_STATUS,
       modelResults:   {},
-      liveMetrics:    {} as Record<ModelName, EpochMetric[]>,
-      liveFolds:      {} as Record<ModelName, { fold: number; flange_out: number; acc: number }[]>,
-      currentTaskId:  null,
+      liveMetrics:      {} as Record<ModelName, EpochMetric[]>,
+      liveFolds:        {} as Record<ModelName, { fold: number; flange_out: number; acc: number }[]>,
+      livePhaseBreaks:  {} as Record<ModelName, number[]>,
+      currentTaskId:    null,
 
-      coralResult: null,
+      classifyResult: null,
 
       // ── Setters ─────────────────────────────────────────────────────────
 
@@ -126,13 +128,16 @@ const useAppStore = create<AppStore>()(
         if (event.type === 'ping') return
 
         set(state => {
-          const ts   = { ...state.trainingStatus }
-          const lm   = { ...state.liveMetrics }
-          const lf   = { ...state.liveFolds }
-          const res  = { ...state.modelResults }
+          const ts  = { ...state.trainingStatus }
+          const lm  = { ...state.liveMetrics }
+          const lf  = { ...state.liveFolds }
+          const lpb = { ...state.livePhaseBreaks }
+          const res = { ...state.modelResults }
 
           if (event.type === 'task1_done') {
             ts[event.model] = 'training'
+            // Record where Task 1 ends so LOIO folds get a separator line
+            lpb[event.model] = [...(lpb[event.model] ?? []), (lm[event.model] ?? []).length]
           }
           if (event.type === 'fold_done') {
             ts[event.model] = 'training'
@@ -140,13 +145,16 @@ const useAppStore = create<AppStore>()(
               ...(lf[event.model] ?? []),
               { fold: event.fold, flange_out: event.flange_out, acc: event.acc },
             ]
+            // Record where this fold ends (= start of next fold)
+            lpb[event.model] = [...(lpb[event.model] ?? []), (lm[event.model] ?? []).length]
           }
           if (event.type === 'epoch') {
             ts[event.model] = 'training'
+            const existing = lm[event.model] ?? []
             lm[event.model] = [
-              ...(lm[event.model] ?? []),
+              ...existing,
               {
-                epoch:      event.epoch,
+                epoch:      existing.length,   // running counter — never resets
                 train_acc:  event.train_acc,
                 val_acc:    event.val_acc,
                 train_loss: event.train_loss,
@@ -163,11 +171,11 @@ const useAppStore = create<AppStore>()(
             if (event.model) ts[event.model] = 'error'
           }
 
-          return { trainingStatus: ts, liveMetrics: lm, liveFolds: lf, modelResults: res }
+          return { trainingStatus: ts, liveMetrics: lm, liveFolds: lf, livePhaseBreaks: lpb, modelResults: res }
         })
       },
 
-      setCoralResult: (result) => set({ coralResult: result }),
+      setClassifyResult: (result) => set({ classifyResult: result }),
 
       reset: () => set({
         sessionId:    null,
@@ -180,10 +188,11 @@ const useAppStore = create<AppStore>()(
         selectedHit:   null,
         trainingStatus: {} as Record<ModelName, TrainingStatus>,
         modelResults:  {},
-        liveMetrics:   {} as Record<ModelName, EpochMetric[]>,
-        liveFolds:     {} as Record<ModelName, { fold: number; flange_out: number; acc: number }[]>,
-        currentTaskId: null,
-        coralResult:   null,
+        liveMetrics:      {} as Record<ModelName, EpochMetric[]>,
+        liveFolds:        {} as Record<ModelName, { fold: number; flange_out: number; acc: number }[]>,
+        livePhaseBreaks:  {} as Record<ModelName, number[]>,
+        currentTaskId:    null,
+        classifyResult: null,
       }),
     }),
     {
@@ -197,7 +206,7 @@ const useAppStore = create<AppStore>()(
         coverage:     s.coverage,
         hitStats:     s.hitStats ? { ...s.hitStats, per_file: [], quality_log: [] } : null,
         modelResults: s.modelResults,
-        coralResult:  s.coralResult,
+        classifyResult: s.classifyResult,
       }),
     },
   ),

@@ -15,11 +15,11 @@ const FEATURE_GROUPS = [
   { key: 'psd',  label: 'Welch PSD (50 bins)', color: '#378ADD',
     why: 'Which frequencies ring loudest after a tap? Tight flanges have sharper, more persistent spectral peaks.' },
   { key: 'mfcc', label: 'MFCC (13 mean + 13 std)', color: '#1D9E75',
-    why: 'Compact summary of the spectral shape — the same features used in speech recognition. Mean subtraction is applied per coefficient to normalise for recording-level differences.' },
+    why: 'Compact summary of the spectral shape,the same features used in speech recognition. Mean subtraction is applied per coefficient to normalise for recording-level differences.' },
   { key: 'decay',label: 'Decay curve → τ', color: '#EF9F27',
     why: 'How fast does the vibration die away? Loose bolts damp the vibration quickly (small τ). Tight bolts let it ring (large τ). This is the most physically interpretable feature.' },
   { key: 'energy',label: 'Energy ratio (late/early)', color: '#534AB7',
-    why: 'Is the flange still vibrating 50ms after the tap? Tight flanges say yes — more energy persists into the late window.' },
+    why: 'Is the flange still vibrating 50ms after the tap? Tight flanges say yes,more energy persists into the late window.' },
 ]
 
 export default function Step4Features() {
@@ -71,7 +71,7 @@ export default function Step4Features() {
         step={4}
         title="Feature extraction"
         subtitle="Convert each 520ms waveform into 82 numbers that capture the physics of the tap."
-        why="Raw waveforms have 24,960 numbers each — far too many, and most are noise. Features compress this into 82 meaningful measurements: which frequencies are loudest, how fast energy decays, and more. This is what the models actually train on."
+        why="Raw waveforms have 24,960 numbers each,far too many, and most are noise. Features compress this into 82 meaningful measurements: which frequencies are loudest, how fast energy decays, and more. This is what the models actually train on."
       />
 
       {/* Feature groups overview */}
@@ -162,7 +162,7 @@ export default function Step4Features() {
                 {activeTab === 'spectrogram' && (
                   <div>
                     <InsightCallout title="Mel spectrogram" variant="info" collapsible defaultOpen={false}>
-                      A "picture of sound" — frequency (mel scale) on the Y axis, time on the X axis, brightness = loudness in dB.
+                      A "picture of sound",frequency (mel scale) on the Y axis, time on the X axis, brightness = loudness in dB.
                       Tight flanges show energy persisting longer in time (brighter right side). The CNN model learns to classify directly from this image.
                     </InsightCallout>
                     <SpectrogramPlot data={selectedHit.mel_spectrogram} height={200} />
@@ -198,7 +198,7 @@ export default function Step4Features() {
                   <div>
                     <InsightCallout title="Exponential decay fit" variant="info" collapsible defaultOpen={false}>
                       The RMS energy envelope (blue) shows how quickly vibration dies away. We fit
-                      A·e^(−t/τ) to find τ — the decay time constant. Small τ = fast decay = loose.
+                      A·e^(−t/τ) to find τ,the decay time constant. Small τ = fast decay = loose.
                       Large τ = slow decay = tight. This is the most physically meaningful single feature.
                     </InsightCallout>
                     <DecayCurve
@@ -231,7 +231,7 @@ export default function Step4Features() {
 
           {/* PCA scatter */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-1">Feature space — PCA projection (2D)</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-1">Feature space,PCA projection (2D)</h3>
             <p className="text-xs text-gray-400 mb-3">
               82 dimensions compressed to 2 for visualisation. Each dot is one tap hit, coloured by tightness class.
               Clusters that overlap = harder to classify.
@@ -247,11 +247,11 @@ export default function Step4Features() {
               } : undefined}
               varRatio={pcaVarRatio}
               height={260}
-              title="All training hits — 2D PCA"
+              title="All training hits,2D PCA"
             />
             <InsightCallout title="What to look for" variant="discovery" collapsible defaultOpen={false}>
               If the three classes form separate clusters, a simple classifier will work well.
-              If they overlap (especially 25 and 50 ft-lbs), the model has a harder job — and you'll see this reflected in Task 2 accuracy.
+              If they overlap (especially 25 and 50 ft-lbs), the model has a harder job,and you'll see this reflected in Task 2 accuracy.
             </InsightCallout>
           </div>
 

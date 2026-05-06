@@ -13,7 +13,7 @@ export default function Step5Training() {
   const navigate = useNavigate()
   const {
     startTraining, handleWsEvent,
-    trainingStatus, modelResults, liveMetrics, liveFolds,
+    trainingStatus, modelResults, liveMetrics, liveFolds, livePhaseBreaks,
     setStep,
   } = useAppStore()
 
@@ -59,17 +59,17 @@ export default function Step5Training() {
         step={5}
         title="Model training"
         subtitle="Train five classifiers and measure how well each generalises to an unseen flange."
-        why="We train every model on the extracted features and evaluate with two tests: Task 1 (easy — random split) and Task 2 (hard — withhold a full flange). Task 2 reveals how well each model generalises to data it has never seen."
+        why="We train every model on the extracted features and evaluate with two tests: Task 1 (easy,random split) and Task 2 (hard,withhold a full flange). Task 2 reveals how well each model generalises to data it has never seen."
       />
 
-      <InsightCallout title="Two evaluation tasks — what they measure" variant="info">
+      <InsightCallout title="Two evaluation tasks,what they measure" variant="info">
         <div className="grid grid-cols-2 gap-3 mt-2">
           <div className="bg-white rounded-lg p-3 border border-blue-200 text-xs">
-            <p className="font-medium text-blue-900 mb-1">Task 1 — Dependent (easy)</p>
+            <p className="font-medium text-blue-900 mb-1">Task 1,Dependent (easy)</p>
             <p className="text-blue-700">Random 70/30 split. Train and test hits come from all flanges, so the model has seen similar data before. Expect ~90%+ accuracy.</p>
           </div>
           <div className="bg-white rounded-lg p-3 border border-blue-200 text-xs">
-            <p className="font-medium text-blue-900 mb-1">Task 2 — LOIO (hard)</p>
+            <p className="font-medium text-blue-900 mb-1">Task 2,LOIO (hard)</p>
             <p className="text-blue-700">Leave-One-Flange-Out: hold out all hits from one flange, train on the other three, test on the held-out flange. Repeat for each flange. This simulates classifying a completely new flange.</p>
           </div>
         </div>
@@ -122,18 +122,19 @@ export default function Step5Training() {
                 result={modelResults[m]}
                 epochs={liveMetrics[m] ?? []}
                 folds={liveFolds[m] ?? []}
+                phaseBreaks={livePhaseBreaks[m] ?? []}
                 selected={selected === m}
                 onSelect={() => setSelected(s => s === m ? m : m)}
               />
             ))}
           </div>
 
-          {/* Domain shift insight — appears once all models are done */}
+          {/* Domain shift insight,appears once all models are done */}
           {allDone && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
               <InsightCallout title="Notice the Task 1 → Task 2 accuracy drop" variant="warning">
                 Every model scores significantly lower on Task 2 (LOIO) than Task 1 (random split).
-                This gap is <strong>domain shift</strong> — the model learned patterns specific to the training flanges
+                This gap is <strong>domain shift</strong>,the model learned patterns specific to the training flanges
                 (microphone angle, surface texture, room acoustics) rather than general tightness patterns.
                 The CORAL step addresses this directly.
               </InsightCallout>
@@ -141,7 +142,7 @@ export default function Step5Training() {
               {/* Quick comparison table */}
               <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100 text-sm font-semibold text-gray-700">
-                  Quick comparison — all models
+                  Quick comparison,all models
                 </div>
                 <table className="w-full text-sm">
                   <thead>

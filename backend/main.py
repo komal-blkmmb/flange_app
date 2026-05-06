@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from routers import upload, process, features, training, coral
+from routers import upload, process, features, training, coral, classify
 
 # ── App ──────────────────────────────────────────────────────────────────────
 
@@ -51,6 +51,7 @@ app.include_router(process.router)
 app.include_router(features.router)
 app.include_router(training.router)
 app.include_router(coral.router)
+app.include_router(classify.router)
 
 # ── Health / root ─────────────────────────────────────────────────────────────
 

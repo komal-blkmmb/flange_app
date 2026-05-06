@@ -1,2 +1,22 @@
-node_modules/ 
-token.md 
+node_modules/
+token.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+backend/venv/
+backend/model_cache/
+
+# Build outputs
+frontend/dist/
+frontend/.vite/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

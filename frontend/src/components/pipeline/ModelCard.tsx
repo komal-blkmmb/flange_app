@@ -9,17 +9,17 @@ import { MODEL_COLORS } from '@/types'
 const MODEL_DESCRIPTIONS: Record<ModelName, { short: string; how: string; hyper: Record<string,string> }> = {
   SVM: {
     short: 'Support Vector Machine',
-    how:   'Finds the widest possible margin between classes in the 82-dim feature space. The RBF kernel lets it draw curved decision boundaries — it maps features into a higher-dimensional space where linear separation becomes possible.',
+    how:   'Finds the widest possible margin between classes in the 82-dim feature space. The RBF kernel lets it draw curved decision boundaries,it maps features into a higher-dimensional space where linear separation becomes possible.',
     hyper: { 'Kernel': 'RBF (Radial Basis Function)', 'C (margin penalty)': '10.0', 'Gamma': 'scale (1/n_features × var)', 'Class weights': 'balanced' },
   },
   LR: {
     short: 'Logistic Regression',
-    how:   'Multiplies each feature by a learned weight, sums them up, then pushes the result through a softmax function to get class probabilities. Simple, fast, and highly interpretable — the weights tell you which features matter most.',
+    how:   'Multiplies each feature by a learned weight, sums them up, then pushes the result through a softmax function to get class probabilities. Simple, fast, and highly interpretable,the weights tell you which features matter most.',
     hyper: { 'Regularisation C': '1.0', 'Solver': 'lbfgs', 'Max iterations': '2000', 'Class weights': 'balanced' },
   },
   KNN: {
     short: 'K-Nearest Neighbours',
-    how:   'No training step — stores all training hits. To classify a new hit, it finds the 5 most similar hits in the training set (by Euclidean distance) and takes a majority vote. Non-parametric, so it can capture any decision boundary shape.',
+    how:   'No training step,stores all training hits. To classify a new hit, it finds the 5 most similar hits in the training set (by Euclidean distance) and takes a majority vote. Non-parametric, so it can capture any decision boundary shape.',
     hyper: { 'k (neighbours)': '5', 'Distance metric': 'Euclidean (L2)', 'Weights': 'uniform' },
   },
   MLP: {
@@ -29,27 +29,28 @@ const MODEL_DESCRIPTIONS: Record<ModelName, { short: string; how: string; hyper:
   },
   CNN: {
     short: 'Convolutional Neural Network',
-    how:   'Takes the mel spectrogram (64 × 128 image) as input. Three Conv2D layers slide filters across the image to detect patterns like formant ridges and decay slopes — the same idea that makes image recognition work.',
-    hyper: { 'Input': '64 mel × 128 frames', 'Conv layers': '32→64→128 filters', 'Pooling': 'MaxPool2D + GlobalAvgPool', 'Epochs': '50 (early stopping)' },
+    how:   'Takes the mel spectrogram (64 × 128 image) as input. Three Conv2D layers slide filters across the image to detect patterns like formant ridges and decay slopes,the same idea that makes image recognition work.',
+    hyper: { 'Input': '64 mel × 128 frames', 'Conv layers': '32→64→128 filters', 'Pooling': 'MaxPool2D + GlobalAvgPool', 'Epochs': '100 (early stopping p=20)' },
   },
   LSTM: {
     short: 'Bidirectional LSTM',
-    how:   'Reads the mel spectrogram as a time sequence — 128 frames, each of 64 mel values. The bidirectional LSTM reads forward AND backward through time, capturing patterns like the rate at which energy decays over the 500ms window.',
-    hyper: { 'Input': '128 time steps × 64 mel features', 'BiLSTM layers': '2 × (64, 32 units bidirectional)', 'Dense': '64 → 3', 'Epochs': '50 (early stopping)' },
+    how:   'Reads the mel spectrogram as a time sequence,128 frames, each of 64 mel values. The bidirectional LSTM reads forward AND backward through time, capturing patterns like the rate at which energy decays over the 500ms window.',
+    hyper: { 'Input': '128 time steps × 64 mel features', 'BiLSTM layers': '2 × (64, 32 units bidirectional)', 'Dense': '32 → 3', 'Epochs': '80 (early stopping p=20)' },
   },
 }
 
 interface ModelCardProps {
-  model:   ModelName
-  status:  TrainingStatus
-  result?: ModelResult
-  epochs?: EpochMetric[]
-  folds?:  { fold: number; flange_out: number; acc: number }[]
-  onSelect?: () => void
-  selected?: boolean
+  model:        ModelName
+  status:       TrainingStatus
+  result?:      ModelResult
+  epochs?:      EpochMetric[]
+  folds?:       { fold: number; flange_out: number; acc: number }[]
+  phaseBreaks?: number[]
+  onSelect?:    () => void
+  selected?:    boolean
 }
 
-export function ModelCard({ model, status, result, epochs = [], folds = [], onSelect, selected }: ModelCardProps) {
+export function ModelCard({ model, status, result, epochs = [], folds = [], phaseBreaks = [], onSelect, selected }: ModelCardProps) {
   const [tab, setTab] = useState<'explain' | 'results' | 'curves'>('explain')
   const info  = MODEL_DESCRIPTIONS[model]
   const color = MODEL_COLORS[model]
@@ -182,8 +183,13 @@ export function ModelCard({ model, status, result, epochs = [], folds = [], onSe
 
               {tab === 'curves' && epochs.length > 0 && (
                 <div className="space-y-4">
-                  <TrainingCurve data={epochs} metric="accuracy" height={160} />
-                  <TrainingCurve data={epochs} metric="loss"     height={160} />
+                  <TrainingCurve data={epochs} metric="accuracy" height={160} phaseBreaks={phaseBreaks} />
+                  <TrainingCurve data={epochs} metric="loss"     height={160} phaseBreaks={phaseBreaks} />
+                  {phaseBreaks.length > 0 && (
+                    <p className="text-xs text-gray-400">
+                      Gray dashed lines mark phase boundaries: Task 1 then {phaseBreaks.length} LOIO fold{phaseBreaks.length > 1 ? 's' : ''}.
+                    </p>
+                  )}
                 </div>
               )}
             </div>

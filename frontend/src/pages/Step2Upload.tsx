@@ -57,7 +57,7 @@ export default function Step2Upload() {
         step={2}
         title="Upload training recordings"
         subtitle="Upload the 48 .m4a audio files (one per flange × class × area combination)."
-        why="We need labelled audio so the app can learn what each tightness level sounds like. The filename encodes the label — that's how we avoid manual annotation."
+        why="We need labelled audio so the app can learn what each tightness level sounds like. The filename encodes the label,that's how we avoid manual annotation."
       />
 
       {/* File naming guide */}
@@ -89,7 +89,7 @@ export default function Step2Upload() {
           <>
             <div className="text-4xl mb-3">📁</div>
             <p className="text-gray-600 font-medium mb-1">Drag &amp; drop your .m4a / .wav files here</p>
-            <p className="text-gray-400 text-sm mb-4">or click to browse — select all 48 files at once</p>
+            <p className="text-gray-400 text-sm mb-4">or click to browse,select all 48 files at once</p>
             <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors">
               Browse files
               <input
@@ -156,7 +156,7 @@ export default function Step2Upload() {
             </InsightCallout>
           )}
           {coverage?.complete && (
-            <InsightCallout title="Dataset complete — all 48 files found" variant="success" />
+            <InsightCallout title="Dataset complete,all 48 files found" variant="success" />
           )}
 
           {/* File table (first 10) */}

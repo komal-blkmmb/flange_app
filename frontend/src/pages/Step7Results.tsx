@@ -16,19 +16,19 @@ const ALL_MODELS: ModelName[] = ['SVM', 'LR', 'KNN', 'MLP', 'CNN', 'LSTM']
 
 const KEY_FINDINGS = [
   {
-    title: 'Loose vs tight is easy — 25 vs 50 is hard',
+    title: 'Loose vs tight is easy,25 vs 50 is hard',
     color: 'amber',
     detail: 'All models achieve near-perfect binary accuracy (loose vs tight). The confusion is almost entirely between 25 and 50 ft-lbs, which have overlapping decay characteristics.',
   },
   {
     title: 'Domain shift causes the Task 1 → Task 2 drop',
     color: 'red',
-    detail: 'The large gap between Task 1 and Task 2 accuracy is not model weakness — it\'s because each flange has slightly different recording conditions. The model memorises the session, not the physics.',
+    detail: 'The large gap between Task 1 and Task 2 accuracy is not model weakness,it\'s because each flange has slightly different recording conditions. The model memorises the session, not the physics.',
   },
   {
     title: 'KNN is often the most robust under LOIO',
     color: 'blue',
-    detail: 'KNN has no parametric training and directly uses the nearest neighbours in feature space. When distribution shifts, it can still find local structure — unlike SVM which relies on a global hyperplane.',
+    detail: 'KNN has no parametric training and directly uses the nearest neighbours in feature space. When distribution shifts, it can still find local structure,unlike SVM which relies on a global hyperplane.',
   },
   {
     title: 'MFCC mean subtraction is the highest-value preprocessing',
@@ -56,7 +56,7 @@ export default function Step7Results() {
         step={7}
         title="Results dashboard"
         subtitle="Full comparison of all models across both evaluation tasks."
-        why="This is the proof page — where we see what worked, what didn't, and why. The gap between Task 1 and Task 2 is the central story of this project."
+        why="This is the proof page,where we see what worked, what didn't, and why. The gap between Task 1 and Task 2 is the central story of this project."
       />
 
       {rows.length === 0 ? (
@@ -136,12 +136,12 @@ export default function Step7Results() {
               className="grid grid-cols-2 gap-4">
               <ConfusionMatrix
                 matrix={modelResults[selectedModel].task1_cm}
-                title={`${selectedModel} — Task 1`}
+                title={`${selectedModel},Task 1`}
                 taskLabel="70/30 split"
               />
               <ConfusionMatrix
                 matrix={modelResults[selectedModel].task2_cm}
-                title={`${selectedModel} — Task 2`}
+                title={`${selectedModel},Task 2`}
                 taskLabel="LOIO pooled"
               />
             </motion.div>
@@ -150,9 +150,9 @@ export default function Step7Results() {
           {/* Feature space PCA */}
           {scatter.length > 0 && (
             <div className="bg-white border border-gray-200 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Feature space — why 25 vs 50 is hard</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-1">Feature space,why 25 vs 50 is hard</h3>
               <p className="text-xs text-gray-400 mb-3">
-                The 0 ft-lbs cluster (red) is well-separated. But 25 ft-lbs (amber) and 50 ft-lbs (green) overlap significantly — this explains the persistent Task 2 confusion.
+                The 0 ft-lbs cluster (red) is well-separated. But 25 ft-lbs (amber) and 50 ft-lbs (green) overlap significantly,this explains the persistent Task 2 confusion.
               </p>
               <PCAScatter points={scatter} varRatio={pcaVarRatio} height={240} />
             </div>
@@ -195,7 +195,7 @@ export default function Step7Results() {
             <button onClick={() => navigate('/ensemble')} className="text-sm text-gray-500 px-4 py-2">← Back</button>
             <button onClick={() => { setStep(8); navigate('/coral') }}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2.5 rounded-xl text-sm transition-colors">
-              Final step: CORAL domain adaptation →
+              Final step: classify new recordings →
             </button>
           </div>
         </div>

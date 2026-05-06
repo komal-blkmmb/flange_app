@@ -15,7 +15,7 @@ export function ConfusionMatrix({ matrix, title, taskLabel }: ConfusionMatrixPro
 
   if (!matrix || matrix.length === 0) return null
 
-  // Total per true class (column sums — matrix[pred][true])
+  // Total per true class (column sums,matrix[pred][true])
   const n = matrix.length
   const totals = Array.from({ length: n }, (_, j) =>
     matrix.reduce((s, row) => s + (row[j] ?? 0), 0)
@@ -30,9 +30,9 @@ export function ConfusionMatrix({ matrix, title, taskLabel }: ConfusionMatrixPro
   function tooltip(pred: number, actual: number): string {
     const count = matrix[pred][actual]
     if (pred === actual) {
-      return `✓ Correctly classified as ${CLASS_NAMES[pred]} — ${count} hits (${(cellPct(pred,actual)*100).toFixed(0)}%)`
+      return `✓ Correctly classified as ${CLASS_NAMES[pred]},${count} hits (${(cellPct(pred,actual)*100).toFixed(0)}%)`
     }
-    return `✗ True class: ${CLASS_NAMES[actual]}, but predicted: ${CLASS_NAMES[pred]} — ${count} hits`
+    return `✗ True class: ${CLASS_NAMES[actual]}, but predicted: ${CLASS_NAMES[pred]},${count} hits`
   }
 
   // Overall accuracy from diagonal

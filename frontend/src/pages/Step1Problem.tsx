@@ -4,9 +4,9 @@ import { InsightCallout, Term } from '@/components/ui/InsightCallout'
 import useAppStore from '@/store/useAppStore'
 
 const CLASSES = [
-  { label: '0 ft-lbs', name: 'Loose',  color: 'bg-red-100 border-red-400 text-red-900',    dot: 'bg-red-500',    tau: 'Fast decay (small τ)', desc: 'Bolt is completely loose. Tap energy escapes quickly — the plate stops vibrating almost immediately.' },
+  { label: '0 ft-lbs', name: 'Loose',  color: 'bg-red-100 border-red-400 text-red-900',    dot: 'bg-red-500',    tau: 'Fast decay (small τ)', desc: 'Bolt is completely loose. Tap energy escapes quickly,the plate stops vibrating almost immediately.' },
   { label: '25 ft-lbs',name: 'Medium', color: 'bg-amber-100 border-amber-400 text-amber-900', dot: 'bg-amber-500', tau: 'Medium decay',        desc: 'Bolt is partially tightened. Some vibration energy is absorbed by the joint.' },
-  { label: '50 ft-lbs',name: 'Tight',  color: 'bg-green-100 border-green-400 text-green-900', dot: 'bg-green-500', tau: 'Slow decay (large τ)', desc: 'Bolt is fully tightened. The joint is rigid — the plate rings like a bell for much longer.' },
+  { label: '50 ft-lbs',name: 'Tight',  color: 'bg-green-100 border-green-400 text-green-900', dot: 'bg-green-500', tau: 'Slow decay (large τ)', desc: 'Bolt is fully tightened. The joint is rigid,the plate rings like a bell for much longer.' },
 ]
 
 const PIPELINE_STEPS = [
@@ -39,13 +39,13 @@ export default function Step1Problem() {
       {/* Hero */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1 rounded-full mb-4">
-          Educational ML Pipeline · Group 23
+          Educational ML Pipeline · Saurav Silwal
         </div>
         <h1 className="text-4xl font-semibold text-gray-900 mb-3">
           Bolted flange looseness detection
         </h1>
         <p className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
-          Can a computer hear whether a bolt is loose or tight — just from the sound of tapping it?
+          Can a computer hear whether a bolt is loose or tight,just from the sound of tapping it?
           Let's find out.
         </p>
       </div>
@@ -53,10 +53,10 @@ export default function Step1Problem() {
       {/* Physical intuition */}
       <InsightCallout title="The physics behind the problem" variant="info">
         When you tap a bolted joint, the vibration energy spreads through the plate and dissipates
-        at the bolt interface. A <strong>tight bolt clamps</strong> the layers together — the joint
+        at the bolt interface. A <strong>tight bolt clamps</strong> the layers together,the joint
         is rigid, so vibration bounces freely and the plate <em>rings</em> for longer. A{' '}
-        <strong>loose bolt</strong> lets the layers slide slightly — energy leaks out at the interface
-        and vibration dies away almost instantly. This difference in <Term word="decay time" definition="How quickly the vibration energy falls to zero after a tap. Measured as τ (tau) — the time constant of an exponential decay.">decay time</Term> is what our models learn to detect.
+        <strong>loose bolt</strong> lets the layers slide slightly,energy leaks out at the interface
+        and vibration dies away almost instantly. This difference in <Term word="decay time" definition="How quickly the vibration energy falls to zero after a tap. Measured as τ (tau),the time constant of an exponential decay.">decay time</Term> is what our models learn to detect.
       </InsightCallout>
 
       {/* The 3 classes */}
@@ -132,11 +132,16 @@ export default function Step1Problem() {
       {/* Key challenge */}
       <InsightCallout title="The key challenge: cross-session generalisation" variant="warning" collapsible defaultOpen={false}>
         Our models will be trained on one set of recordings (one day, one setup). Then tested on a{' '}
-        <em>different</em> recording session — different microphone position, different background
+        <em>different</em> recording session,different microphone position, different background
         noise. This is called <strong>domain shift</strong> and it's why a model that scores 95% on
         training data might only score 50% on lab data. The final step of this pipeline —
-        CORAL domain adaptation — addresses this directly.
+        CORAL domain adaptation,addresses this directly.
       </InsightCallout>
+
+      <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8 text-xs text-gray-500 leading-relaxed">
+        <p className="font-medium text-gray-600 mb-1">Acknowledgments</p>
+        <p>The financial support from Midstream Integrity Services (MIS) and technical support from Smart Materials &amp; Structures Lab (SMSL) and Artificial Intelligence Lab for Monitoring &amp; Inspection (AILMI) at UH.</p>
+      </div>
 
       <div className="text-center mt-8">
         <button

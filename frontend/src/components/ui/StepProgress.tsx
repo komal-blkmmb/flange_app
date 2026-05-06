@@ -11,7 +11,7 @@ export function StepProgress() {
     if (id === 3) return useAppStore.getState().hitStats !== null
     if (id === 4) return useAppStore.getState().scatter.length > 0
     if (id === 5) return Object.keys(modelResults).length > 0
-    if (id === 8) return useAppStore.getState().coralResult !== null
+    if (id === 8) return useAppStore.getState().classifyResult !== null
     return id < currentStep
   }
 

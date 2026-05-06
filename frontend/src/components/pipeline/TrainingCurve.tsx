@@ -1,13 +1,14 @@
 import {
   LineChart, Line, XAxis, YAxis, Tooltip,
-  Legend, ResponsiveContainer, CartesianGrid, ReferenceLine,
+  ResponsiveContainer, CartesianGrid, ReferenceLine,
 } from 'recharts'
 import type { EpochMetric } from '@/types'
 
 interface TrainingCurveProps {
-  data:    EpochMetric[]
-  metric?: 'accuracy' | 'loss'
-  height?: number
+  data:         EpochMetric[]
+  metric?:      'accuracy' | 'loss'
+  height?:      number
+  phaseBreaks?: number[]
 }
 
 const COLORS = {
@@ -15,7 +16,7 @@ const COLORS = {
   val:   '#E24B4A',
 }
 
-export function TrainingCurve({ data, metric = 'accuracy', height = 200 }: TrainingCurveProps) {
+export function TrainingCurve({ data, metric = 'accuracy', height = 200, phaseBreaks = [] }: TrainingCurveProps) {
   if (data.length === 0) {
     return (
       <div
@@ -82,6 +83,19 @@ export function TrainingCurve({ data, metric = 'accuracy', height = 200 }: Train
             labelFormatter={(l: number) => `Epoch ${l}`}
             contentStyle={{ fontSize: 11, borderRadius: 8, border: '0.5px solid #e5e7eb' }}
           />
+          {phaseBreaks.map((x, i) => {
+            const label = i === 0 ? 'T1|F1' : `F${i}|F${i + 1}`
+            return (
+              <ReferenceLine
+                key={`pb-${i}`}
+                x={x}
+                stroke="#D1D5DB"
+                strokeDasharray="4 3"
+                strokeWidth={1.5}
+                label={{ value: label, position: 'insideTopRight', fontSize: 7, fill: '#9CA3AF' }}
+              />
+            )
+          })}
           {bestEpoch >= 0 && (
             <ReferenceLine
               x={data[bestEpoch]?.epoch}

@@ -7,9 +7,9 @@ import useAppStore from '@/store/useAppStore'
 import { api } from '@/api/client'
 
 const QUALITY_THRESHOLDS = [
-  { label: 'Peak amplitude ≥ 0.05',   desc: 'Minimum loudness — rejects near-silence.' },
-  { label: 'Crest factor ≥ 4.0×',     desc: 'Peak ÷ RMS — ensures the signal is impulsive, not sustained noise.' },
-  { label: 'Attack ratio ≥ 0.60',     desc: 'Fraction of energy in first 50ms — ensures we caught the onset.' },
+  { label: 'Peak amplitude ≥ 0.05',   desc: 'Minimum loudness,rejects near-silence.' },
+  { label: 'Crest factor ≥ 4.0×',     desc: 'Peak ÷ RMS,ensures the signal is impulsive, not sustained noise.' },
+  { label: 'Attack ratio ≥ 0.60',     desc: 'Fraction of energy in first 50ms,ensures we caught the onset.' },
 ]
 
 export default function Step3Signal() {
@@ -38,10 +38,10 @@ export default function Step3Signal() {
         step={3}
         title="Signal processing & hit detection"
         subtitle={`Locate and extract individual tap events from ${uploadedFiles.length} audio recordings.`}
-        why="Each file contains a continuous recording with ~20 taps. We find exactly where each tap starts, cut a 520ms window around it, and reject any hits that fail a quality check — this clean data is what the models learn from."
+        why="Each file contains a continuous recording with ~20 taps. We find exactly where each tap starts, cut a 520ms window around it, and reject any hits that fail a quality check,this clean data is what the models learn from."
       />
 
-      <InsightCallout title="The hit detection pipeline — step by step" variant="info">
+      <InsightCallout title="The hit detection pipeline,step by step" variant="info">
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-2">
           {[
             { n: 1, label: 'Load audio',     desc: '48 kHz mono' },
@@ -91,7 +91,7 @@ export default function Step3Signal() {
           {/* Full recording waveform */}
           {firstFileWaveform.length > 0 && (
             <div className="bg-white border border-gray-200 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-gray-700 mb-1">Full recording — {uploadedFiles[0]?.filename}</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-1">Full recording,{uploadedFiles[0]?.filename}</h3>
               <p className="text-xs text-gray-400 mb-3">Amber fill = RMS energy envelope. Peaks in the envelope are where taps were detected.</p>
               <WaveformCanvas
                 waveform={firstFileWaveform}
@@ -121,7 +121,7 @@ export default function Step3Signal() {
 
           {/* Quality filter */}
           <div className="bg-white border border-gray-200 rounded-xl p-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Quality filter criteria — all three must pass</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">Quality filter criteria,all three must pass</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {QUALITY_THRESHOLDS.map(q => (
                 <div key={q.label} className="bg-green-50 border border-green-200 rounded-lg p-3">

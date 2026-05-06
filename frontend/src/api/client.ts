@@ -122,6 +122,12 @@ export const api = {
   runCoral: () =>
     request<import('@/types').CoralResult>('POST', '/api/coral'),
 
+  classifyRecordings: (files: File[]) => {
+    const fd = new FormData()
+    files.forEach(f => fd.append('files', f))
+    return upload<import('@/types').ClassifyResult>('/api/classify', fd)
+  },
+
   health: () =>
     request<{ status: string; sessions: number }>('GET', '/health'),
 }

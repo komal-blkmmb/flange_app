@@ -60,7 +60,7 @@ export default function App() {
 
         {/* Footer */}
         <footer className="border-t border-gray-200 py-3 px-6 text-center text-xs text-gray-400">
-          Bolted Flange Looseness Detection · Group 23 · ML Final Project 2026
+          Bolted Flange Looseness Detection · Saurav Silwal · Machine Learning, Spring 2026, Instructor: Gangbing Song, PhD
         </footer>
       </div>
     </BrowserRouter>
