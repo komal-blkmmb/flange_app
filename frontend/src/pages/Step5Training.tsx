@@ -32,10 +32,8 @@ export default function Step5Training() {
   async function runTraining() {
     setStarted(true); setError(null); setAllDone(false)
     try {
-      const { task_id, models } = await api.startTraining(
-        ALL_MODELS.map(m => m === 'LSTM' ? 'BiLSTM' : m) as any
-      )
-      startTraining(task_id, models as ModelName[])
+      const { task_id, models } = await api.startTraining(ALL_MODELS)
+      startTraining(task_id, models)
 
       wsRef.current = createTrainingWS(
         task_id,

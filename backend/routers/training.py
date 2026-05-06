@@ -418,8 +418,7 @@ def _train_cnn(waveforms, y, groups, loop, queue, session, epochs=50):
 # BiLSTM training (Keras, mel sequences)
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _train_bilstm(waveforms, y, groups, loop, queue, session, epochs=50):
-    model_name = "BiLSTM"
+def _train_bilstm(waveforms, y, groups, loop, queue, session, epochs=50, model_name="LSTM"):
     try:
         import tensorflow as tf
         tf.random.set_seed(SEED)
@@ -525,8 +524,8 @@ def _train_all(task_id: str, session_id: str, models: list[str], main_loop: asyn
             _train_mlp(X, y, groups, loop, queue, session)
         elif m == "CNN":
             _train_cnn(waveforms, y, groups, loop, queue, session)
-        elif m == "BiLSTM":
-            _train_bilstm(waveforms, y, groups, loop, queue, session)
+        elif m in ("BiLSTM", "LSTM"):
+            _train_bilstm(waveforms, y, groups, loop, queue, session, model_name=m)
 
     emit(loop, queue, {"type": "all_done", "task_id": task_id})
 
